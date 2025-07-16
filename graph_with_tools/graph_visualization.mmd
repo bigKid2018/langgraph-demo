@@ -1,0 +1,52 @@
+---
+config:
+  flowchart:
+    curve: linear
+  theme: base
+  themeVariables:
+    primaryColor: '#f4f4f4'
+    primaryTextColor: '#333'
+    primaryBorderColor: '#333'
+    lineColor: '#333'
+---
+
+graph TD
+    %% 开始节点
+    __start__([开始]):::startStyle
+    
+    %% 主要节点
+    agent["Agent节点<br/>📋 分析用户输入<br/>🤖 调用LLM"]:::agentStyle
+    action["Tool节点<br/>🔍 执行工具调用<br/>📊 处理工具结果"]:::toolStyle
+    
+    %% 结束节点
+    __end__([结束]):::endStyle
+    
+    %% 条件判断
+    decision{"🤔 需要调用工具？<br/>检查tool_calls"}:::decisionStyle
+    
+    %% 外部服务
+    llm["🧠 Azure OpenAI<br/>GPT-4o"]:::serviceStyle
+    tavily["🔍 Tavily Search<br/>网络搜索API"]:::serviceStyle
+    
+    %% 流程连接
+    __start__ --> agent
+    agent --> llm
+    llm --> agent
+    agent --> decision
+    decision -->|"是<br/>has tool_calls"| action
+    decision -->|"否<br/>no tool_calls"| __end__
+    action --> tavily
+    tavily --> action
+    action --> agent
+    
+    %% 样式定义
+    classDef startStyle fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
+    classDef endStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    classDef agentStyle fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000
+    classDef toolStyle fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px,color:#000
+    classDef decisionStyle fill:#f0f4c3,stroke:#827717,stroke-width:2px,color:#000
+    classDef serviceStyle fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+    
+    %% 节点注释
+    agent -.-> |"生成回答或<br/>tool_calls"| decision
+    action -.-> |"返回工具<br/>执行结果"| agent 
