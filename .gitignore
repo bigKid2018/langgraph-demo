@@ -47,6 +47,21 @@ logs/
 .env.test.local
 .env.production.local
 
-# API keys
+# API keys and secrets
 config.py
 apikey.txt
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
+
+# Additional security files
+.secrets/
+auth.json
+token.json
+*_secret*
+*_password*
+*_key*
+*.secret
